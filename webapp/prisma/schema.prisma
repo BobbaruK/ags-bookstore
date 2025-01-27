@@ -13,6 +13,7 @@
  * SELECT * FROM User;     ❌
  */
 
+// Auth tables
 generator client {
   provider = "prisma-client-js"
 }
@@ -42,6 +43,10 @@ model User {
   updatedAt             DateTime               @updatedAt
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  booksCreated          books[]                @relation("booksCreated")
+  booksUpdated          books[]                @relation("booksUpdated")
+  authorsCreated        authors[]              @relation("authorCreated")
+  authorsUpdated        authors[]              @relation("authorUpdated")
 }
 
 model Account {
@@ -98,4 +103,41 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+// App tables
+
+model authors {
+  id            String   @id @unique @default(cuid())
+  createdAt     DateTime @default(now())
+  createdBy     User?    @relation("authorCreated", fields: [createdUserId], references: [id], onDelete: SetNull)
+  createdUserId String?
+  updatedAt     DateTime @updatedAt
+  updatedBy     User?    @relation("authorUpdated", fields: [updateUserId], references: [id], onDelete: SetNull)
+  updateUserId  String?
+  firstName     String
+  lastName      String
+  slug          String   @unique
+  author        String
+  books         books[]
+
+  @@index([id, slug])
+}
+
+model books {
+  id            String   @id @unique @default(cuid())
+  createdAt     DateTime @default(now())
+  createdBy     User?    @relation("booksCreated", fields: [createdUserId], references: [id], onDelete: SetNull)
+  createdUserId String?
+  updatedAt     DateTime @updatedAt
+  updatedBy     User?    @relation("booksUpdated", fields: [updateUserId], references: [id], onDelete: SetNull)
+  updateUserId  String?
+  title         String   @unique
+  slug          String   @unique
+  author        authors  @relation(fields: [authorId], references: [id])
+  authorId      String
+  price         Int
+  stock         Int
+
+  @@index([id, slug])
 }

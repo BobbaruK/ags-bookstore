@@ -53,8 +53,8 @@ export const columns: ColumnDef<DB_Book>[] = [
   // Author
   {
     ...columnId({ id: "author" }),
-    accessorFn: (originalRow) => originalRow.author.slug,
-    enableHiding: false,
+    accessorFn: (originalRow) => originalRow.author?.slug || undefined,
+    // enableHiding: false,
     header: ({ column }) => {
       return (
         <Button
@@ -71,10 +71,18 @@ export const columns: ColumnDef<DB_Book>[] = [
     },
 
     cell: ({ row }) => {
-      const slug = row.original.slug;
-      const authorName = `${row.original.author.firstName} ${row.original.author.lastName}`;
+      const author = row.original.author;
+      const slug = author?.slug;
+      const authorName = `${author?.firstName} ${author?.lastName}`;
 
-      return <Link href={`/authors/${slug}`}>{authorName}</Link>;
+      if (author)
+        return (
+          <Link href={`/authors/${slug}`}>
+            {row.original.author ? authorName : ""}
+          </Link>
+        );
+
+      return "Unknown author";
     },
   },
   // Price

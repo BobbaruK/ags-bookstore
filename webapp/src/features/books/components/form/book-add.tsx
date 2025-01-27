@@ -2,18 +2,36 @@
 
 import { revalidate } from "@/actions/reavalidate";
 import { CustomButton } from "@/components/custom-button";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ACTION_MESSAGES } from "@/constants/messages";
 import { FormError } from "@/features/auth/components/form-error";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Prisma } from "@prisma/client";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -22,7 +40,19 @@ import { z } from "zod";
 import { addBook } from "../../actions/add-book";
 import { BookSchema } from "../../schemas/book-schema";
 
-export const BookAddForm = () => {
+interface Props {
+  authors: Prisma.authorsGetPayload<{
+    include: {
+      _count: {
+        select: {
+          books: true;
+        };
+      };
+    };
+  }>[];
+}
+
+export const BookAddForm = ({ authors }: Props) => {
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -32,7 +62,7 @@ export const BookAddForm = () => {
     defaultValues: {
       title: "",
       slug: "",
-      author: "cm6fi6zhv0000u6l0a91m5n8q",
+      author: "",
       price: "",
       stock: "",
     },
@@ -98,7 +128,7 @@ export const BookAddForm = () => {
               </FormItem>
             )}
           />
-          {/* <FormField
+          <FormField
             control={form.control}
             name="author"
             render={({ field }) => (
@@ -117,58 +147,40 @@ export const BookAddForm = () => {
                           )}
                         >
                           {field.value
-                            ? logos?.find((logo) => logo.url === field.value)
-                                ?.name
-                            : "Select brand logo"}
+                            ? authors?.find(
+                                (author) => author.id === field.value,
+                              )?.firstName
+                            : "Select author"}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-[300px] p-0">
                       <Command>
-                        <CommandInput placeholder="Search brand logo..." />
+                        <CommandInput placeholder="Search author..." />
                         <CommandList>
-                          <CommandEmpty>No flag found.</CommandEmpty>
+                          <CommandEmpty>No author found.</CommandEmpty>
                           <CommandGroup>
-                            {logos
-                              ?.sort((a, b) => {
-                                const nameA = a.name.toUpperCase();
-                                const nameB = b.name.toUpperCase();
-                                if (nameA < nameB) {
-                                  return -1;
-                                }
-                                if (nameA > nameB) {
-                                  return 1;
-                                }
-
-                                return 0;
-                              })
-                              .map((brand) => (
-                                <CommandItem
-                                  value={brand.name}
-                                  key={brand.id}
-                                  onSelect={() => {
-                                    form.setValue("logo", brand.url);
-                                  }}
-                                  className="flex items-center gap-0"
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      brand.url === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0",
-                                    )}
-                                  />
-                                  <div className="flex items-center gap-4">
-                                    <CustomAvatar
-                                      image={brand.url}
-                                      className="size-7"
-                                    />
-                                    {brand.name}
-                                  </div>
-                                </CommandItem>
-                              ))}
+                            {authors.map((author) => (
+                              <CommandItem
+                                value={author.firstName}
+                                key={author.id}
+                                onSelect={() => {
+                                  form.setValue("author", author.id);
+                                }}
+                                className="flex items-center gap-0"
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    author.id === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                                {author.firstName} {author.lastName}
+                              </CommandItem>
+                            ))}
                           </CommandGroup>
                         </CommandList>
                       </Command>
@@ -193,7 +205,7 @@ export const BookAddForm = () => {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
 
           <FormField
             control={form.control}

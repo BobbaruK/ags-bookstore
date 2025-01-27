@@ -4,10 +4,10 @@ import { ACTION_MESSAGES } from "@/constants/messages";
 import { getUserById } from "@/features/auth/data/user";
 import { currentUser } from "@/features/auth/lib/auth";
 import db from "@/lib/db";
+import { prismaError } from "@/lib/prisma-error";
 import { Prisma, UserRole } from "@prisma/client";
 import { z } from "zod";
 import { BookSchema } from "../schemas/book-schema";
-import { prismaError } from "@/lib/prisma-error";
 
 export const addBook = async (values: z.infer<typeof BookSchema>) => {
   const user = await currentUser();
@@ -35,7 +35,7 @@ export const addBook = async (values: z.infer<typeof BookSchema>) => {
         slug,
         price: parseFloat(`${price}`),
         stock: parseInt(`${stock}`),
-        authorId: author,
+        authorId: author || null,
         createdUserId: dbUser.id,
         updateUserId: dbUser.id,
       },

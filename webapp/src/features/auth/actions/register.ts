@@ -7,13 +7,9 @@ import { getUserByEmail } from "../data/user";
 import { generateVerificationToken } from "../lib/tokens";
 import { sendVerificationEmail } from "../lib/mail";
 import { RegisterSchema } from "../schemas/register";
-
-const MESSAGES = {
-  INVALID_FIELDS: "Invalid fields!",
-  EMAIL_IN_USE: "Email already in use",
-  CONFIRMATION_SENT: "Confirmation email sent!",
-  GENERIC_ERROR: "Something went wrong!",
-};
+import { ACTION_MESSAGES } from "@/constants/messages";
+import { Prisma } from "@prisma/client";
+import { prismaError } from "@/lib/prisma-error";
 
 /**
  * **{@linkcode register} server function**
@@ -21,26 +17,29 @@ const MESSAGES = {
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
 
-  if (!validatedFields.success) return { error: MESSAGES.INVALID_FIELDS };
+  if (!validatedFields.success)
+    return { error: ACTION_MESSAGES().INVALID_FIELDS };
 
-  const { email, name, password } = validatedFields.data;
+  const { email, firstName, lastName, userName, password } =
+    validatedFields.data;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
-  if (existingUser) return { error: MESSAGES.EMAIL_IN_USE };
+  if (existingUser) return { error: ACTION_MESSAGES().EMAIL_IN_USE };
 
   try {
     await db.user.create({
-      data: { name, email, password: hashedPassword },
+      data: { firstName, lastName, userName, email, password: hashedPassword },
     });
 
     let verificationToken;
     try {
       verificationToken = await generateVerificationToken(email);
     } catch (error) {
-      console.error("Error generating verification token:", error);
-      return { error: "Failed to generate verification token!" };
+      console.error("Something went wrong: ", JSON.stringify(error));
+
+      return { error: ACTION_MESSAGES().FAILED_VERIFICATION_TOKEN };
     }
 
     try {
@@ -49,13 +48,17 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         verificationToken.token,
       );
     } catch (error) {
-      console.error("Error sending verification email:", error);
-      return { error: "Failed to send verification email!" };
+      console.error("Something went wrong: ", JSON.stringify(error));
+      return { error: ACTION_MESSAGES().FAILED_VERIFICATION_EMAIL };
     }
 
-    return { success: MESSAGES.CONFIRMATION_SENT };
+    return { success: ACTION_MESSAGES().CONFIRMATION_SENT };
   } catch (error) {
     console.error("Something went wrong: ", JSON.stringify(error));
-    return { error: MESSAGES.GENERIC_ERROR };
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError)
+      return { ...prismaError(error, "Email") };
+
+    throw error;
   }
 };

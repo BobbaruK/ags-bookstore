@@ -5,7 +5,9 @@ import { z } from "zod";
 
 export const SettingsSchema = z
   .object({
-    name: z.optional(z.string()),
+    firstName: z.optional(z.string()),
+    lastName: z.optional(z.string()),
+    userName: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
     role: z.enum(userRoles()),
     email: z.optional(z.string().email()),

@@ -42,7 +42,9 @@ const SettingsPage = () => {
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      name: user?.name || undefined,
+      firstName: user?.firstName || undefined,
+      lastName: user?.lastName || undefined,
+      userName: user?.username || undefined,
       email: user?.email || undefined,
       password: undefined,
       newPassword: undefined,
@@ -85,14 +87,48 @@ const SettingsPage = () => {
               <div className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>First name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="John Doe"
+                          placeholder="John"
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Doe"
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="userName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Reptile"
                           disabled={isPending}
                         />
                       </FormControl>

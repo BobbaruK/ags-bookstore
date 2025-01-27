@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ACTION_MESSAGES } from "@/constants/messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -32,7 +33,9 @@ export const RegisterForm = () => {
     defaultValues: {
       email: "",
       password: process.env.NEXT_PUBLIC_DEFAULT_REGISTER_PASSWORD || "",
-      name: "",
+      firstName: "",
+      lastName: "",
+      userName: "",
     },
   });
 
@@ -40,17 +43,19 @@ export const RegisterForm = () => {
     setError("");
 
     startTransition(() => {
-      register(values).then((data) => {
-        if (data.error) {
-          setError(data.error);
-        }
+      register(values)
+        .then((data) => {
+          if (data.error) {
+            setError(data.error);
+          }
 
-        if (data.success) {
-          form.reset();
-          toast.success(data.success);
-          router.push("/");
-        }
-      });
+          if (data.success) {
+            form.reset();
+            toast.success(data.success);
+            router.push("/");
+          }
+        })
+        .catch(() => setError(ACTION_MESSAGES().WENT_WRONG));
     });
   };
   return (
@@ -65,15 +70,51 @@ export const RegisterForm = () => {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>First name</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      placeholder="john doe"
+                      placeholder="John"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="Doe"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="userName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="Reptile"
                       disabled={isPending}
                     />
                   </FormControl>

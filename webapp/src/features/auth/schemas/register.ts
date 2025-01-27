@@ -8,7 +8,23 @@ import { passwordRefine } from "@/lib/utils";
 import { z } from "zod";
 
 export const RegisterSchema = z.object({
-  name: z
+  firstName: z
+    .string()
+    .min(MIN_USERNAME, {
+      message: `First name must be ${MIN_USERNAME} or more characters long`,
+    })
+    .max(MAX_USERNAME, {
+      message: `First name must be ${MAX_USERNAME} or fewer characters long`,
+    }),
+  lastName: z
+    .string()
+    .min(MIN_USERNAME, {
+      message: `Last name must be ${MIN_USERNAME} or more characters long`,
+    })
+    .max(MAX_USERNAME, {
+      message: `Last name must be ${MAX_USERNAME} or fewer characters long`,
+    }),
+  userName: z
     .string()
     .min(MIN_USERNAME, {
       message: `Username must be ${MIN_USERNAME} or more characters long`,

@@ -30,6 +30,9 @@ export const ACTION_MESSAGES = (resource?: string) => {
     CUSTOM_ALERT: resource
       ? `Something went wrong. ${resource} does not return any data!`
       : "Does not return any data!",
+    FAILED_VERIFICATION_TOKEN: "Failed to generate verification token!",
+    FAILED_VERIFICATION_EMAIL: "Failed to send verification email!",
+    CONFIRMATION_SENT: "Confirmation email sent!",
   };
 };
 

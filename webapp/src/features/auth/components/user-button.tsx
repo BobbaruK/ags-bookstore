@@ -33,7 +33,13 @@ export const UserButton = () => {
         <Avatar>
           <AvatarImage src={user?.image || ""} />
           <AvatarFallback className="bg-background text-foreground">
-            <FaUser />
+            {user?.firstName && user.lastName ? (
+              user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase()
+            ) : (
+              <>
+                <FaUser />
+              </>
+            )}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

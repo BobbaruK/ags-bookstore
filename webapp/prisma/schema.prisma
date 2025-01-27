@@ -135,8 +135,8 @@ model books {
   slug          String   @unique
   price         Float
   stock         Int
-  author        authors  @relation("authorBooks", fields: [authorId], references: [id])
-  authorId      String
+  author        authors? @relation("authorBooks", fields: [authorId], references: [id], onDelete: SetNull)
+  authorId      String?
 
   @@index([id, slug])
 }

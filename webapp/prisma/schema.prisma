@@ -118,8 +118,7 @@ model authors {
   firstName     String
   lastName      String
   slug          String   @unique
-  author        String
-  books         books[]
+  books         books[]  @relation("authorBooks")
 
   @@index([id, slug])
 }
@@ -134,10 +133,10 @@ model books {
   updateUserId  String?
   title         String   @unique
   slug          String   @unique
-  author        authors  @relation(fields: [authorId], references: [id])
-  authorId      String
-  price         Int
+  price         Float
   stock         Int
+  author        authors  @relation("authorBooks", fields: [authorId], references: [id])
+  authorId      String
 
   @@index([id, slug])
 }

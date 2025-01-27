@@ -38,3 +38,10 @@ export const passwordRefine = (password: string, ctx: z.RefinementCtx) => {
     });
   }
 };
+
+export const columnId = ({ id }: { id: string }) => {
+  return {
+    id,
+    accessorKey: id,
+  };
+};

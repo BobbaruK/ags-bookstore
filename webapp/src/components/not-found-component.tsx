@@ -11,9 +11,9 @@ type Props = {
 
 export const NotFoundComponent = ({ resource, linkHref, customMsg }: Props) => {
   return (
-    <div className="grid h-dvh w-full place-items-center bg-background @container">
-      <div className="flex max-w-4xl flex-col items-center justify-center px-5 text-foreground @4xl:flex-row">
-        <div className="flex w-full flex-col gap-4 text-center @4xl:text-start">
+    <div className="@container grid h-dvh w-full place-items-center bg-background">
+      <div className="@4xl:flex-row flex max-w-4xl flex-col items-center justify-center px-5 text-foreground">
+        <div className="@4xl:text-start flex w-full flex-col gap-4 text-center">
           <div>
             <h1 className="font-dark text-5xl font-bold">404</h1>
             <h2 className="text-balance text-2xl font-light leading-normal md:text-3xl">
@@ -31,10 +31,10 @@ export const NotFoundComponent = ({ resource, linkHref, customMsg }: Props) => {
           </p>
 
           <Link
-            href={linkHref || "/dashboard"}
+            href={linkHref || "/"}
             className={cn(
               buttonVariants({ variant: "default", effect: BUTTON_EFFECT }),
-              "self-center @4xl:self-start",
+              "@4xl:self-start self-center",
             )}
           >
             Take me {resource && linkHref ? `to ${resource}s` : "Home"}!

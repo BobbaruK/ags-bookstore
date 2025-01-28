@@ -176,8 +176,7 @@ export const columns: ColumnDef<DB_Book>[] = [
     },
     cell: ({ row }) => {
       const bookId = row.original.id;
-      const createdById =
-        row.original.createdBy?.id || "cm6go3uhb0012nu1rua0viim5";
+      const createdById = row.original.createdUserId || "";
 
       return (
         <div className="flex items-center justify-start">

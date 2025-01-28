@@ -1,9 +1,12 @@
+"use client";
+
 import { revalidate } from "@/actions/reavalidate";
 import { ACTION_MESSAGES } from "@/constants/messages";
 import { addCartItem } from "@/features/cart-item/actions/add-cart-item";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { CustomButton } from "./custom-button";
+import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 
 interface Props {
   userId: string;
@@ -11,11 +14,12 @@ interface Props {
 }
 
 export const AddToCartBtn = ({ userId, bookId }: Props) => {
+  const user = useCurrentUser();
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = async () => {
     startTransition(() => {
-      addCartItem(userId, bookId)
+      addCartItem(user?.id || "", bookId)
         .then((data) => {
           if (data.error) {
             toast.error(data.error);

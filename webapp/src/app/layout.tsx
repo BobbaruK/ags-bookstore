@@ -1,9 +1,4 @@
 import { auth } from "@/auth";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Footer } from "@/components/footer";
-import Header from "@/components/header";
-import { MainWrapper } from "@/components/main-wrapper";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { FactoriesSessionProvider } from "@/providers/session-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -45,14 +40,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider>
-              <AppSidebar />
-              <MainWrapper>
-                <Header />
-                {children}
-                <Footer />
-              </MainWrapper>
-            </SidebarProvider>
+            {children}
             <Toaster richColors closeButton />
           </ThemeProvider>
         </FactoriesSessionProvider>

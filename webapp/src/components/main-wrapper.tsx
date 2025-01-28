@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+import { Footer } from "./footer";
+import Header from "./header";
 import { useSidebar } from "./ui/sidebar";
 
 interface Props {
@@ -13,18 +15,16 @@ export const MainWrapper = ({ children }: Props) => {
 
   return (
     // TODO: this shit make cls on mobile
-
-    <main
-      className={cn(
-        "grid min-h-dvh w-full grid-rows-siteGrid flex-col transition-[width] duration-200",
-        {
-          "w-[calc(100%)]": isMobile,
-          "w-[calc(100%-var(--sidebar-width))]":
-            !isMobile && state === "expanded",
-        },
-      )}
+    <div
+      className={cn("flex w-full flex-col transition-[width] duration-200", {
+        "w-full": isMobile,
+        "w-[calc(100%-var(--sidebar-width))]":
+          !isMobile && state === "expanded",
+      })}
     >
-      {children}
-    </main>
+      <Header />
+      <main>{children}</main>
+      <Footer />
+    </div>
   );
 };

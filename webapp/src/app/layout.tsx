@@ -1,12 +1,15 @@
 import { auth } from "@/auth";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Footer } from "@/components/footer";
 import Header from "@/components/header";
+import { MainWrapper } from "@/components/main-wrapper";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { FactoriesSessionProvider } from "@/providers/session-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Footer } from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,11 +45,17 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="grid min-h-[100vh] grid-rows-siteGrid gap-10">
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </div>
+            <SidebarProvider>
+              <AppSidebar />
+              {/* <div className="grid min-h-dvh w-full grid-rows-siteGrid gap-10"> */}
+              <MainWrapper>
+                <Header />
+                {children}
+
+                <Footer />
+              </MainWrapper>
+              {/* </div> */}
+            </SidebarProvider>
             <Toaster richColors closeButton />
           </ThemeProvider>
         </FactoriesSessionProvider>

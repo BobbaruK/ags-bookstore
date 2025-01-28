@@ -3,6 +3,7 @@
 import { UserButton } from "@/features/auth/components/user-button";
 import { usePathname } from "next/navigation";
 import { CustomButton } from "./custom-button";
+import { SidebarTrigger } from "./ui/sidebar";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -21,7 +22,10 @@ export const Navbar = () => {
           linkHref="/authors"
         />
       </div>
-      <UserButton />
+      <div className="flex items-center gap-2">
+        <SidebarTrigger />
+        <UserButton />
+      </div>
     </nav>
   );
 };

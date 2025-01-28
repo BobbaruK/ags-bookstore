@@ -133,7 +133,7 @@ export const BookAddForm = ({ authors }: Props) => {
             name="author"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel className="self-start">Logo</FormLabel>
+                <FormLabel className="self-start">Author</FormLabel>
                 <div className="flex flex-row items-center gap-4">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -142,20 +142,24 @@ export const BookAddForm = ({ authors }: Props) => {
                           variant="outline"
                           role="combobox"
                           className={cn(
-                            "w-[300px] justify-between",
+                            "flex w-full justify-between",
                             !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value
                             ? authors?.find(
                                 (author) => author.id === field.value,
-                              )?.firstName
+                              )?.firstName +
+                              " " +
+                              authors?.find(
+                                (author) => author.id === field.value,
+                              )?.lastName
                             : "Select author"}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[300px] p-0">
+                    <PopoverContent className="w-full p-0" align="start">
                       <Command>
                         <CommandInput placeholder="Search author..." />
                         <CommandList>
@@ -186,10 +190,10 @@ export const BookAddForm = ({ authors }: Props) => {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  <FormDescription
-                    className={cn("flex h-auto items-center gap-4")}
-                  >
-                    {form.getValues("author") && (
+                  {form.getValues("author") && (
+                    <FormDescription
+                      className={cn("flex h-auto items-center gap-4")}
+                    >
                       <Button
                         size={"sm"}
                         variant={"link"}
@@ -199,8 +203,8 @@ export const BookAddForm = ({ authors }: Props) => {
                       >
                         Remove author
                       </Button>
-                    )}
-                  </FormDescription>
+                    </FormDescription>
+                  )}
                 </div>
                 <FormMessage />
               </FormItem>

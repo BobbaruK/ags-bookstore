@@ -2,6 +2,7 @@
 
 import { CustomButton } from "@/components/custom-button";
 import { SortingArrows } from "@/components/sorting-arrows";
+import { StockAlert } from "@/components/stock-alert";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/format-currency";
 import { dateFormatter } from "@/lib/format-date";
@@ -133,13 +134,7 @@ export const columns: ColumnDef<DB_Book>[] = [
     cell: ({ row }) => {
       const stock = row.original.stock;
 
-      if (stock > 10)
-        return <div className="size-6 rounded-full bg-success"></div>;
-
-      if (stock > 5)
-        return <div className="size-6 rounded-full bg-warning"></div>;
-
-      return <div className="size-6 rounded-full bg-danger"></div>;
+      return <StockAlert stock={stock} />;
     },
   },
   // Created At

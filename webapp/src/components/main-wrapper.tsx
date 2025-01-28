@@ -13,18 +13,18 @@ export const MainWrapper = ({ children }: Props) => {
 
   return (
     // TODO: this shit make cls on mobile
-    <div
-      className={cn("flex w-full flex-col transition-[width] duration-200", {
-        "w-full": isMobile,
-        "w-[calc(100%-var(--sidebar-width))]":
-          !isMobile && state === "expanded",
-        "w-[calc(100%-var(--sidebar-width-icon)-1rem)]":
-          !isMobile && state === "collapsed",
-      })}
+
+    <main
+      className={cn(
+        "grid min-h-dvh w-full grid-rows-siteGrid flex-col transition-[width] duration-200",
+        {
+          "w-[calc(100%)]": isMobile,
+          "w-[calc(100%-var(--sidebar-width))]":
+            !isMobile && state === "expanded",
+        },
+      )}
     >
-      <main className="grid min-h-dvh w-full grid-rows-siteGrid">
-        {children}
-      </main>
-    </div>
+      {children}
+    </main>
   );
 };

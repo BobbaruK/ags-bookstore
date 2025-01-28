@@ -47,14 +47,11 @@ export default async function RootLayout({
           >
             <SidebarProvider>
               <AppSidebar />
-              {/* <div className="grid min-h-dvh w-full grid-rows-siteGrid gap-10"> */}
               <MainWrapper>
                 <Header />
                 {children}
-
                 <Footer />
               </MainWrapper>
-              {/* </div> */}
             </SidebarProvider>
             <Toaster richColors closeButton />
           </ThemeProvider>

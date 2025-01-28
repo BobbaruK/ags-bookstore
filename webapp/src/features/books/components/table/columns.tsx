@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomButton } from "@/components/custom-button";
+import { AddToCartBtn } from "@/components/add-to-cart-btn";
 import { SortingArrows } from "@/components/sorting-arrows";
 import { StockAlert } from "@/components/stock-alert";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,11 @@ import Link from "next/link";
 
 type DB_Book = Prisma.booksGetPayload<{
   include: {
+    createdBy: {
+      select: {
+        id: true;
+      };
+    };
     author: {
       select: {
         firstName: true;
@@ -169,14 +174,14 @@ export const columns: ColumnDef<DB_Book>[] = [
     header: () => {
       return "Actions";
     },
-    cell: () => {
+    cell: ({ row }) => {
+      const bookId = row.original.id;
+      const createdById =
+        row.original.createdBy?.id || "cm6go3uhb0012nu1rua0viim5";
+
       return (
         <div className="flex items-center justify-start">
-          <CustomButton
-            buttonLabel="Add to cart"
-            size={"sm"}
-            variant={"outline"}
-          />
+          <AddToCartBtn userId={createdById} bookId={bookId} />
         </div>
       );
     },

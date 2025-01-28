@@ -12,6 +12,11 @@ export const getBooks = async () => {
         createdAt: "desc",
       },
       include: {
+        createdBy: {
+          select: {
+            id: true,
+          },
+        },
         author: {
           select: {
             firstName: true,

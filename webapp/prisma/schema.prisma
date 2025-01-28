@@ -47,6 +47,7 @@ model User {
   booksUpdated          books[]                @relation("booksUpdated")
   authorsCreated        authors[]              @relation("authorCreated")
   authorsUpdated        authors[]              @relation("authorUpdated")
+  cart_items            cart_item[]
 }
 
 model Account {
@@ -124,19 +125,33 @@ model authors {
 }
 
 model books {
-  id            String   @id @unique @default(cuid())
-  createdAt     DateTime @default(now())
-  createdBy     User?    @relation("booksCreated", fields: [createdUserId], references: [id], onDelete: SetNull)
+  id            String      @id @unique @default(cuid())
+  createdAt     DateTime    @default(now())
+  createdBy     User?       @relation("booksCreated", fields: [createdUserId], references: [id], onDelete: SetNull)
   createdUserId String?
-  updatedAt     DateTime @updatedAt
-  updatedBy     User?    @relation("booksUpdated", fields: [updateUserId], references: [id], onDelete: SetNull)
+  updatedAt     DateTime    @updatedAt
+  updatedBy     User?       @relation("booksUpdated", fields: [updateUserId], references: [id], onDelete: SetNull)
   updateUserId  String?
-  title         String   @unique
-  slug          String   @unique
+  title         String      @unique
+  slug          String      @unique
   price         Float
   stock         Int
-  author        authors? @relation("authorBooks", fields: [authorId], references: [id], onDelete: SetNull)
+  author        authors?    @relation("authorBooks", fields: [authorId], references: [id], onDelete: SetNull)
   authorId      String?
+  cart_items    cart_item[]
 
   @@index([id, slug])
+}
+
+model cart_item {
+  id        String   @id @unique @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  product   books    @relation(fields: [booksId], references: [id], onDelete: Cascade)
+  booksId   String
+  quantity  Int
+
+  @@index([id, userId, booksId])
 }

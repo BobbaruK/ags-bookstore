@@ -15,6 +15,11 @@ export const getAuthorBySlug = async (slug: string) => {
       include: {
         books: {
           include: {
+            createdBy: {
+              select: {
+                id: true,
+              },
+            },
             author: {
               select: {
                 firstName: true,

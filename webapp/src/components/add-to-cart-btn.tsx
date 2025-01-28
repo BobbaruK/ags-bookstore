@@ -2,11 +2,11 @@
 
 import { revalidate } from "@/actions/reavalidate";
 import { ACTION_MESSAGES } from "@/constants/messages";
+import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { addCartItem } from "@/features/cart-item/actions/add-cart-item";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { CustomButton } from "./custom-button";
-import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 
 interface Props {
   userId: string;

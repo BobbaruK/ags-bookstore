@@ -12,6 +12,6 @@ export const BookSchema = z.object({
     }),
   slug: z.string(),
   price: z.union([z.number().gt(0, "Must be greater than 0"), z.string()]),
-  stock: z.union([z.number().gt(0, "Must be greater than 0"), z.string()]),
-  author: z.string(),
+  stock: z.union([z.number(), z.string()]),
+  author: z.string().optional(),
 });

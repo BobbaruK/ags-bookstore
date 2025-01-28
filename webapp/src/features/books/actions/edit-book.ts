@@ -7,20 +7,20 @@ import db from "@/lib/db";
 import { prismaError } from "@/lib/prisma-error";
 import { Prisma, UserRole } from "@prisma/client";
 import { z } from "zod";
-import { AuthorSchema } from "../schemas/author-schema";
+import { BookSchema } from "../schemas/book-schema";
 
-export const editAuthor = async (
-  values: z.infer<typeof AuthorSchema>,
+export const editBook = async (
+  values: z.infer<typeof BookSchema>,
   id: string,
 ) => {
   const user = await currentUser();
 
-  const validatedFields = AuthorSchema.safeParse(values);
+  const validatedFields = BookSchema.safeParse(values);
 
   if (!validatedFields.success)
     return { error: ACTION_MESSAGES().INVALID_FIELDS };
 
-  const { firstName, lastName, slug } = validatedFields.data;
+  const { title, slug, author, price, stock } = validatedFields.data;
 
   if (!user || !user.id) {
     return { error: ACTION_MESSAGES().UNAUTHORIZED };
@@ -32,27 +32,27 @@ export const editAuthor = async (
     return { error: ACTION_MESSAGES().UNAUTHORIZED };
 
   try {
-    await db.authors.update({
-      where: {
-        id,
-      },
+    await db.books.update({
+      where: { id },
       data: {
-        firstName,
-        lastName,
+        title,
         slug,
+        price: parseFloat(`${price}`),
+        stock: parseInt(`${stock}`),
+        authorId: author || null,
         createdUserId: dbUser.id,
         updateUserId: dbUser.id,
       },
     });
 
     return {
-      success: ACTION_MESSAGES("Author").SUCCESS_UPDATE,
+      success: ACTION_MESSAGES("Book").SUCCESS_UPDATE,
     };
   } catch (error) {
     console.error("Something went wrong: ", JSON.stringify(error));
 
     if (error instanceof Prisma.PrismaClientKnownRequestError)
-      return { ...prismaError(error, "Slug") };
+      return { ...prismaError(error, "Title and/or Slug") };
 
     throw error;
   }

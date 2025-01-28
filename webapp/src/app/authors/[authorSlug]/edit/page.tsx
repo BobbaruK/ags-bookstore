@@ -11,12 +11,12 @@ interface Props {
   }>;
 }
 
-const EditLicensePage = async ({ params }: Props) => {
+const EditAuthorPage = async ({ params }: Props) => {
   const { authorSlug } = await params;
 
-  const brandHref = `/authors/${authorSlug}`;
+  const authorHref = `/authors/${authorSlug}`;
 
-  await redirectUser(brandHref);
+  await redirectUser(authorHref);
 
   const author = await getAuthorBySlug(authorSlug);
 
@@ -26,7 +26,7 @@ const EditLicensePage = async ({ params }: Props) => {
     <PageStructure>
       <PageTtle
         label={`Edit "${author.firstName} ${author.lastName}"`}
-        backBtnHref={brandHref}
+        backBtnHref={authorHref}
       />
 
       <AuthorEditForm author={author} />
@@ -34,4 +34,4 @@ const EditLicensePage = async ({ params }: Props) => {
   );
 };
 
-export default EditLicensePage;
+export default EditAuthorPage;

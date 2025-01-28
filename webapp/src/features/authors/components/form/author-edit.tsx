@@ -2,6 +2,7 @@
 
 import { revalidate } from "@/actions/reavalidate";
 import { CustomButton } from "@/components/custom-button";
+import { DeleteDialog } from "@/components/delete-dialog";
 import {
   Form,
   FormControl,
@@ -13,26 +14,48 @@ import {
 import { Input } from "@/components/ui/input";
 import { ACTION_MESSAGES } from "@/constants/messages";
 import { FormError } from "@/features/auth/components/form-error";
+import { useCurrentRole } from "@/features/auth/hooks/use-current-role";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Prisma, UserRole } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { addAuthor } from "../../actions/add-author";
+import { deleteAuthor } from "../../actions/delete-author";
+import { editAuthor } from "../../actions/edit-author";
 import { AuthorSchema } from "../../schemas/author-schema";
 
-export const AuthorAddForm = () => {
+interface Props {
+  author: Prisma.authorsGetPayload<{
+    include: {
+      books: {
+        include: {
+          author: {
+            select: {
+              firstName: true;
+              lastName: true;
+              slug: true;
+            };
+          };
+        };
+      };
+    };
+  }>;
+}
+
+export const AuthorEditForm = ({ author }: Props) => {
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const userRole = useCurrentRole();
 
   const form = useForm<z.infer<typeof AuthorSchema>>({
     resolver: zodResolver(AuthorSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      slug: "",
+      firstName: author.firstName,
+      lastName: author.lastName,
+      slug: author.slug,
     },
   });
 
@@ -40,7 +63,7 @@ export const AuthorAddForm = () => {
     setError(undefined);
 
     startTransition(() => {
-      addAuthor(values)
+      editAuthor(values, author.id)
         .then((data) => {
           if (data.error) {
             setError(data.error);
@@ -48,6 +71,23 @@ export const AuthorAddForm = () => {
           if (data.success) {
             toast.success(data.success);
             router.push("/authors");
+          }
+          revalidate();
+        })
+        .catch(() => setError(ACTION_MESSAGES().WENT_WRONG));
+    });
+  };
+
+  const onDelete = () => {
+    startTransition(() => {
+      deleteAuthor(author.id)
+        .then((data) => {
+          if (data.error) {
+            setError(data.error);
+          }
+          if (data.success) {
+            toast.success(data.success);
+            router.push(`/authors`);
           }
           revalidate();
         })
@@ -130,11 +170,23 @@ export const AuthorAddForm = () => {
           />
         </div>
         <FormError message={error} />
-        <CustomButton
-          buttonLabel="Add Author"
-          type="submit"
-          disabled={isPending}
-        />
+
+        <div className="flex gap-4">
+          <CustomButton
+            buttonLabel="Add Author"
+            type="submit"
+            disabled={isPending}
+          />
+          {userRole !== UserRole.USER && (
+            <DeleteDialog
+              label={author.firstName + " " + author.lastName}
+              asset={"Author"}
+              onDelete={onDelete}
+              hideLabelOnMobile={false}
+              disabled={isPending}
+            />
+          )}
+        </div>
       </form>
     </Form>
   );

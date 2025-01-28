@@ -11,7 +11,7 @@ interface Props {
   }>;
 }
 
-const BrandPage = async ({ params }: Props) => {
+const AuthorPage = async ({ params }: Props) => {
   const { authorSlug } = await params;
 
   const author = await getAuthorBySlug(authorSlug);
@@ -42,4 +42,4 @@ const BrandPage = async ({ params }: Props) => {
   );
 };
 
-export default BrandPage;
+export default AuthorPage;

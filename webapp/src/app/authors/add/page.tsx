@@ -1,7 +1,6 @@
 import { PageStructure } from "@/components/page-structure";
 import { PageTtle } from "@/components/page-title";
 import { AuthorAddForm } from "@/features/authors/components/form/author-add";
-import { BookAddForm } from "@/features/books/components/form/book-add";
 import { redirectUser } from "@/lib/redirect-user";
 
 const AddBookPage = async () => {

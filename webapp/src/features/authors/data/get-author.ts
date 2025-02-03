@@ -28,6 +28,9 @@ export const getAuthorBySlug = async (slug: string) => {
               },
             },
           },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
     });

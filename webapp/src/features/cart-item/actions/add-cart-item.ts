@@ -27,6 +27,23 @@ export const addCartItem = async (userId: string, bookId: string) => {
 
   if (!existingCartItem)
     try {
+      const book = await db.books.findUnique({
+        where: {
+          id: bookId,
+        },
+      });
+
+      if (!book)
+        return {
+          error: ACTION_MESSAGES("Book").DOES_NOT_EXISTS,
+        };
+
+      if (book.stock === 0) {
+        return {
+          error: "This book is not in stock",
+        };
+      }
+
       await db.cart_item.create({
         data: {
           userId,

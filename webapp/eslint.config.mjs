@@ -64,10 +64,12 @@ const eslintConfig = [
               from: ["shared"],
               // I'm not happy using "feature" in "shared"
               // The logic is: auth is a mandatory feature and I need cart-item features in other features
+              // edit: 202502032348 this is stupid - I need better planning
               allow: [
                 "shared",
                 ["feature", { featureName: "auth" }],
                 ["feature", { featureName: "cart-item" }],
+                ["feature", { featureName: "books" }],
               ],
             },
             {
@@ -76,8 +78,10 @@ const eslintConfig = [
                 "shared",
                 // I'm not happy using "feature" in other "feature"s
                 // The logic is: auth is a mandatory feature and I need cart-item features in other features
+                // edit: 202502032348 this is stupid - I need better planning
                 ["feature", { featureName: "auth" }],
                 ["feature", { featureName: "cart-item" }],
+                ["feature", { featureName: "books" }],
                 ["feature", { featureName: "${from.featureName}" }],
               ],
             },

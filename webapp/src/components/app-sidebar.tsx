@@ -9,7 +9,6 @@ import {
 import { currentUser } from "@/features/auth/lib/auth";
 import { getCartItemsByUserId } from "@/features/cart-item/data/get-cart-items";
 import { formatCurrency } from "@/lib/format-currency";
-import { CustomButton } from "./custom-button";
 import { DeleteCartItem } from "./delete-cart-item";
 import { SubmitCartBtn } from "./submit-cart-btn";
 

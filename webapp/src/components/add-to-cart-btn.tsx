@@ -2,7 +2,6 @@
 
 import { revalidate } from "@/actions/reavalidate";
 import { ACTION_MESSAGES } from "@/constants/messages";
-import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { addCartItem } from "@/features/cart-item/actions/add-cart-item";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -14,12 +13,13 @@ interface Props {
 }
 
 export const AddToCartBtn = ({ userId, bookId }: Props) => {
-  const user = useCurrentUser();
+  // const user = useCurrentUser();
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = async () => {
     startTransition(() => {
-      addCartItem(user?.id || "", bookId)
+      // addCartItem(user?.id || "", bookId)
+      addCartItem(userId, bookId)
         .then((data) => {
           if (data.error) {
             toast.error(data.error);

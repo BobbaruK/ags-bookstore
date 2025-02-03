@@ -11,6 +11,7 @@ import { getCartItemsByUserId } from "@/features/cart-item/data/get-cart-items";
 import { formatCurrency } from "@/lib/format-currency";
 import { CustomButton } from "./custom-button";
 import { DeleteCartItem } from "./delete-cart-item";
+import { SubmitCartBtn } from "./submit-cart-btn";
 
 export async function AppSidebar() {
   const user = await currentUser();
@@ -54,7 +55,7 @@ export async function AppSidebar() {
           <span>Total</span>
           <span>{formatCurrency(total)}</span>
         </div>
-        <CustomButton buttonLabel="Submit" />
+        <SubmitCartBtn items={cartItems} />
       </SidebarFooter>
     </Sidebar>
   );

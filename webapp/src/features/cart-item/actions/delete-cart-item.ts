@@ -14,10 +14,10 @@ export const deleteCartItem = async (id: string) => {
     return { error: ACTION_MESSAGES().UNAUTHORIZED };
   }
 
-  const dbUser = await getUserById(user.id);
+  // const dbUser = await getUserById(user.id);
 
-  if (!dbUser || user.role === UserRole.USER)
-    return { error: ACTION_MESSAGES().UNAUTHORIZED };
+  // if (!dbUser || user.role === UserRole.USER)
+  //   return { error: ACTION_MESSAGES().UNAUTHORIZED };
 
   const existingCartItem = await db.cart_item.findUnique({
     where: {

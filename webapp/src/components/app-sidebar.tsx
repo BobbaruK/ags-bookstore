@@ -30,10 +30,6 @@ export async function AppSidebar() {
       <SidebarHeader>Shopping cart</SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          {/* <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupAction>
-            <Plus /> <span className="sr-only">Add Project</span>
-          </SidebarGroupAction> */}
           <SidebarGroupContent className="flex flex-col gap-7">
             {/* <pre>{JSON.stringify(cartItems, null, 2)}</pre> */}
             {cartItems && cartItems.length > 0

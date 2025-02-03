@@ -21,6 +21,9 @@ export const getCartItemsByUserId = async (id: string) => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return cartItems;

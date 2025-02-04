@@ -8,7 +8,7 @@ export const Footer = () => {
   const pathname = usePathname();
 
   return (
-    <footer className="py-4">
+    <footer className="mt-auto py-4">
       <div className="container flex flex-wrap gap-2">
         <Button
           asChild
